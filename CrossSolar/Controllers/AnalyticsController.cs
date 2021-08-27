@@ -40,7 +40,7 @@ namespace CrossSolar.Controllers
                 OneHourElectricitys = analytics.Select(c => new OneHourElectricityModel
                 {
                     Id = c.Id,
-					PanelId = c.PanelId,
+                    PanelId = c.PanelId,
                     KiloWatt = c.KiloWatt,
                     DateTime = c.DateTime
                 })
