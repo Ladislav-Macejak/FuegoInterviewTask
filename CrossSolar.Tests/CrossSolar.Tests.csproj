@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <None Remove="Domain\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
 	<DotNetCliToolReference Include="MiniCover" Version="2.0.0-ci-20180304114938" />
@@ -18,10 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrossSolar\CrossSolar.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\" />
   </ItemGroup>
 
 </Project>
