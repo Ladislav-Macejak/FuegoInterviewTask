@@ -121,7 +121,7 @@ namespace CrossSolar.Tests.Controller
             { 
                 new Panel{ Id = 1, Serial = "AAAA1111BBBB2222", Latitude = -35.492758, Longitude = 80.947992 }, 
                 new Panel{ Id = 2, Serial = "CCCC3333DDDD4444", Latitude = 22.199302, Longitude = 139.400192 }
-            }.AsQueryable(); 			
+			}.AsQueryable(); 			
 			var panelMockSet = new Mock<DbSet<Panel>>(); 
 			panelMockSet.As<IAsyncEnumerable<Panel>>().Setup(m => m.GetEnumerator()).Returns(new TestAsyncEnumerator<Panel>(panelData.GetEnumerator()));
 			panelMockSet.As<IQueryable<Panel>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<Panel>(panelData.Provider));
@@ -134,8 +134,10 @@ namespace CrossSolar.Tests.Controller
 			var analyticsData = new List<OneHourElectricity> 
             { 
                 new OneHourElectricity{ Id = 1, PanelId = "AAAA1111BBBB2222", KiloWatt = 12, DateTime = DateTime.UtcNow }, 
-                new OneHourElectricity{ Id = 2, PanelId = "CCCC3333DDDD4444", KiloWatt = 31, DateTime = DateTime.UtcNow }
-            }.AsQueryable(); 			
+                new OneHourElectricity{ Id = 2, PanelId = "CCCC3333DDDD4444", KiloWatt = 31, DateTime = DateTime.UtcNow },
+                new OneHourElectricity{ Id = 3, PanelId = "AAAA1111BBBB2222", KiloWatt = 14, DateTime = DateTime.UtcNow.AddDays(-1) },
+                new OneHourElectricity{ Id = 4, PanelId = "AAAA1111BBBB2222", KiloWatt = 8, DateTime = DateTime.UtcNow.AddDays(-1) }
+			}.AsQueryable(); 			
 			var analyticsMockSet = new Mock<DbSet<OneHourElectricity>>(); 
 			analyticsMockSet.As<IAsyncEnumerable<OneHourElectricity>>().Setup(m => m.GetEnumerator()).Returns(new TestAsyncEnumerator<OneHourElectricity>(analyticsData.GetEnumerator()));
 			analyticsMockSet.As<IQueryable<OneHourElectricity>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<OneHourElectricity>(analyticsData.Provider));
@@ -169,9 +171,9 @@ namespace CrossSolar.Tests.Controller
 
             // Assert
             Assert.NotNull(result);
-            var createdResult = result as CreatedResult;
-            Assert.NotNull(createdResult);
-            Assert.Equal(201, createdResult.StatusCode);
+            var OkResult = result as OkObjectResult;
+            Assert.NotNull(OkResult);
+            Assert.Equal(200, OkResult.StatusCode);
         }
 
         [Fact]
@@ -194,5 +196,17 @@ namespace CrossSolar.Tests.Controller
             Assert.Equal(201, createdResult.StatusCode);
         }
 
-    }
+        [Fact]
+        public async Task Get_ShouldReturnDayResultsData()
+        {
+            // Act
+            var result = await _analyticsController.DayResults("AAAA1111BBBB2222");
+
+            // Assert
+            Assert.NotNull(result);
+            var OkResult = result as OkObjectResult;
+            Assert.NotNull(OkResult);
+            Assert.Equal(200, OkResult.StatusCode);
+        }
+	}
 }
