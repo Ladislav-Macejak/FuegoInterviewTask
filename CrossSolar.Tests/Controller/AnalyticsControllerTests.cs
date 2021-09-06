@@ -135,8 +135,8 @@ namespace CrossSolar.Tests.Controller
             { 
                 new OneHourElectricity{ Id = 1, PanelId = "AAAA1111BBBB2222", KiloWatt = 12, DateTime = DateTime.UtcNow }, 
                 new OneHourElectricity{ Id = 2, PanelId = "CCCC3333DDDD4444", KiloWatt = 31, DateTime = DateTime.UtcNow },
-                new OneHourElectricity{ Id = 3, PanelId = "AAAA1111BBBB2222", KiloWatt = 14, DateTime = DateTime.UtcNow.AddDays(-1) },
-                new OneHourElectricity{ Id = 4, PanelId = "AAAA1111BBBB2222", KiloWatt = 8, DateTime = DateTime.UtcNow.AddDays(-1) }
+                new OneHourElectricity{ Id = 3, PanelId = "AAAA1111BBBB2222", KiloWatt = 20, DateTime = DateTime.UtcNow },
+                new OneHourElectricity{ Id = 4, PanelId = "AAAA1111BBBB2222", KiloWatt = 30, DateTime = DateTime.UtcNow },
 			}.AsQueryable(); 			
 			var analyticsMockSet = new Mock<DbSet<OneHourElectricity>>(); 
 			analyticsMockSet.As<IAsyncEnumerable<OneHourElectricity>>().Setup(m => m.GetEnumerator()).Returns(new TestAsyncEnumerator<OneHourElectricity>(analyticsData.GetEnumerator()));
@@ -204,9 +204,19 @@ namespace CrossSolar.Tests.Controller
 
             // Assert
             Assert.NotNull(result);
-            var OkResult = result as OkObjectResult;
-            Assert.NotNull(OkResult);
-            Assert.Equal(200, OkResult.StatusCode);
+
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+			var oneDayElectricityListModel = okResult.Value as OneDayElectricityListModel;
+            Assert.NotNull(oneDayElectricityListModel);
+
+            foreach (var oneDayElectricityModel in oneDayElectricityListModel.OneDayElectricitys)
+            {
+				Assert.Equal(DateTime.UtcNow.Date, oneDayElectricityModel.DateTime.Date);
+			}
+
+			Assert.Equal(200, okResult.StatusCode);
         }
 	}
 }

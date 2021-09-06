@@ -23,6 +23,7 @@ namespace CrossSolar.Tests.Controller
         [Fact]
         public async Task Register_ShouldInsertPanel()
         {
+            // Arrange
             var panel = new PanelModel
             {
                 Brand = "Areva",
@@ -30,8 +31,6 @@ namespace CrossSolar.Tests.Controller
                 Longitude = 98.7655432,
                 Serial = "AAAA1111BBBB2222"
             };
-
-            // Arrange
 
             // Act
             var result = await _panelController.Register(panel);

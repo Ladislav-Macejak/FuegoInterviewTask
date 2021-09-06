@@ -54,7 +54,7 @@ namespace CrossSolar.Controllers
         public async Task<IActionResult> DayResults([FromRoute] string panelId)
         {
             var panelLastDayData = await _analyticsRepository.Query()
-                .Where(x => x.PanelId.Equals(panelId, StringComparison.CurrentCultureIgnoreCase) && x.DateTime.Date == DateTime.Now.Date)
+                .Where(x => x.PanelId.Equals(panelId, StringComparison.CurrentCultureIgnoreCase) && x.DateTime.Date == DateTime.UtcNow.Date)
                 .ToListAsync();
 
             if (!panelLastDayData.Any())
@@ -78,7 +78,7 @@ namespace CrossSolar.Controllers
                         Average = averageKiloWatt,
                         Maximum = maxKiloWatt,
                         Minimum = minKiloWatt,
-                        DateTime = DateTime.Now.Date
+                        DateTime = DateTime.UtcNow.Date
                     }
                 }
             };
